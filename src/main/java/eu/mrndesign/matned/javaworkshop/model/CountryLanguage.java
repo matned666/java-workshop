@@ -16,21 +16,8 @@ public class CountryLanguage {
     private boolean is_official;
     private Double percentage;
 
-    public Country getCountry() {
-        return country;
-    }
-
     public String getLanguage() {
         return language;
     }
-
-    public boolean isIs_official() {
-        return is_official;
-    }
-
-    public Double getPercentage() {
-        return percentage;
-    }
-
 
 }
