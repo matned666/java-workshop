@@ -13,5 +13,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=world
       - SPRING_DATASOURCE_PASSWORD=world123
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - 8080:8080
   db:
     image: 'ghusta/postgres-world-db:2.5'

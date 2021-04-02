@@ -8,12 +8,12 @@ import eu.mrndesign.matned.javaworkshop.repository.CountryRepository;
 import org.springframework.stereotype.Service;
 
 import java.rmi.ServerError;
+import java.util.List;
 
 @Service
 public class CountryService {
 
     public static final String INVALID_COUNTRY_CODE = "INVALID_COUNTRY_CODE";
-    public static final String COUNTRY_LANGUAGE_NOT_FOUND = "COUNTRY_LANGUAGE_NOT_FOUND";
     public static final String INTERNAL_ERROR = "INTERNAL_ERROR";
 
     private final CountryRepository countryRepository;
@@ -28,14 +28,13 @@ public class CountryService {
     public CountryDisplayDTO findByCountryCode(String code) throws ServerError {
 
         if (countryRepository.checkConnection()) {
-            Country country = countryRepository.findByCountryCode(code).orElseThrow(() -> new ServerError(INVALID_COUNTRY_CODE, new Error()));
-            if (country != null) {
-                CountryLanguage countryLanguage = countryLanguageRepository
-                        .findByCountryCode(code)
-                        .orElseThrow(() -> new ServerError(COUNTRY_LANGUAGE_NOT_FOUND, new Error()));
-                return CountryDisplayDTO.apply(country, countryLanguage);
-            }
-            throw new ServerError(INVALID_COUNTRY_CODE, new Error());
+            List<Country> countries = countryRepository.findByCountryCode(code);
+            Country country = countries.size() > 0? countries.get(0) : null;
+            if (country == null) throw new ServerError(INVALID_COUNTRY_CODE, new Error());
+            List<CountryLanguage> languages = countryLanguageRepository
+                    .findByCountryCode(code);
+            CountryLanguage countryLanguage = languages.size()>0? languages.get(0) : null;
+            return CountryDisplayDTO.apply(country, countryLanguage);
         }
         throw new ServerError(INTERNAL_ERROR, new Error());
     }

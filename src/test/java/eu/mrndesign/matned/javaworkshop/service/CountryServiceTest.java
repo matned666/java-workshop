@@ -20,6 +20,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.rmi.ServerError;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Optional;
 
 import static eu.mrndesign.matned.javaworkshop.service.CountryService.INTERNAL_ERROR;
@@ -59,8 +62,8 @@ class CountryServiceTest {
     @Test
     void findByCountryCode() throws ServerError {
         doReturn(true).when(countryRepository).checkConnection();
-        doReturn(Optional.of(country)).when(countryRepository).findByCountryCode(anyString());
-        doReturn(Optional.of(countryLanguage)).when(countryLanguageRepository).findByCountryCode(anyString());
+        doReturn(Collections.singletonList(country)).when(countryRepository).findByCountryCode(anyString());
+        doReturn(Collections.singletonList(countryLanguage)).when(countryLanguageRepository).findByCountryCode(anyString());
 
         assertEquals(CountryDisplayDTO.apply(country, countryLanguage), countryService.findByCountryCode("asd"));
     }
@@ -68,7 +71,7 @@ class CountryServiceTest {
     @Test
     void ifNonExistentCodeIsCalledThenReturnErrorMessage() throws ServerError {
         doReturn(true).when(countryRepository).checkConnection();
-        doReturn(Optional.empty()).when(countryRepository).findByCountryCode(anyString());
+        doReturn(new LinkedList<>()).when(countryRepository).findByCountryCode(anyString());
 
         ServerError error = assertThrows(ServerError.class, ()-> countryService.findByCountryCode("eee"));
 
