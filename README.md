@@ -35,7 +35,7 @@ ifNonExistentCodeIsCalledThenReturnErrorMessage<br>
 
 # Docker
 
-You can launch this docker image like this :
+You can launch this docker image from src/main/docker folder like this :
 
 `docker-compose up --build`
 
