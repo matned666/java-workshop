@@ -13,23 +13,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.rmi.ServerError;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Optional;
 
 import static eu.mrndesign.matned.javaworkshop.service.CountryService.INTERNAL_ERROR;
 import static eu.mrndesign.matned.javaworkshop.service.CountryService.INVALID_COUNTRY_CODE;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doReturn;
 
 
@@ -51,38 +46,42 @@ class CountryServiceTest {
 
     private Country country;
     private CountryLanguage countryLanguage;
-
+    private String[] sortBy;
+    private Pageable pageable;
 
     @BeforeEach
     void setUp() {
         country = new Country();
         countryLanguage = new CountryLanguage();
+        sortBy = new String[1];
+        sortBy[0] = "something";
+        pageable = countryService.getPageable(1, 1, sortBy);
     }
 
     @Test
     void findByCountryCode() throws ServerError {
         doReturn(true).when(countryRepository).checkConnection();
-        doReturn(Collections.singletonList(country)).when(countryRepository).findByCountryCode(anyString());
+        doReturn(new PageImpl<>(Collections.singletonList(country), pageable, 1)).when(countryRepository).findByCountryCode(any(), any(Pageable.class));
         doReturn(Collections.singletonList(countryLanguage)).when(countryLanguageRepository).findByCountryCode(anyString());
 
-        assertEquals(CountryDisplayDTO.apply(country, countryLanguage), countryService.findByCountryCode("asd"));
+        assertEquals(Collections.singletonList(CountryDisplayDTO.apply(country, Collections.singletonList(countryLanguage))), countryService.findByCountryCode("asd", 1, 1, sortBy));
     }
 
     @Test
-    void ifNonExistentCodeIsCalledThenReturnErrorMessage() throws ServerError {
+    void ifNonExistentCodeIsCalledThenReturnErrorMessage() {
         doReturn(true).when(countryRepository).checkConnection();
-        doReturn(new LinkedList<>()).when(countryRepository).findByCountryCode(anyString());
+        doReturn(new PageImpl<>(Collections.emptyList(), pageable, 0)).when(countryRepository).findByCountryCode(any(), any(Pageable.class));
 
-        ServerError error = assertThrows(ServerError.class, ()-> countryService.findByCountryCode("eee"));
+        ServerError error = assertThrows(ServerError.class, ()-> countryService.findByCountryCode("eee", 1,1,sortBy));
 
         assertTrue(error.getLocalizedMessage().contains(INVALID_COUNTRY_CODE));
     }
 
     @Test
-    void ifNoConnectionWithDatabaseThenReturnErrorMessage() throws ServerError {
+    void ifNoConnectionWithDatabaseThenReturnErrorMessage()  {
         doReturn(false).when(countryRepository).checkConnection();
 
-        ServerError error = assertThrows(ServerError.class, ()-> countryService.findByCountryCode("eee"));
+        ServerError error = assertThrows(ServerError.class, ()-> countryService.findByCountryCode("eee", 1,1,sortBy));
 
         assertTrue(error.getLocalizedMessage().contains(INTERNAL_ERROR));
     }
