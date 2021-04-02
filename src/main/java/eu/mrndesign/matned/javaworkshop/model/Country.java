@@ -25,10 +25,6 @@ public class Country  {
     private Long capital;
     private String code2;
 
-    public String getCountryCode() {
-        return countryCode;
-    }
-
     public String getCountryName() {
         return countryName;
     }
@@ -37,48 +33,12 @@ public class Country  {
         return continent;
     }
 
-    public Double getSurface_area() {
-        return surface_area;
-    }
-
-    public Integer getIndep_year() {
-        return indep_year;
-    }
-
     public Integer getPopulation() {
         return population;
     }
 
     public Double getLife_expectancy() {
         return life_expectancy;
-    }
-
-    public Double getGnp() {
-        return gnp;
-    }
-
-    public Double getGnp_old() {
-        return gnp_old;
-    }
-
-    public String getLocal_name() {
-        return local_name;
-    }
-
-    public String getGovernment_form() {
-        return government_form;
-    }
-
-    public String getHead_of_state() {
-        return head_of_state;
-    }
-
-    public Long getCapital() {
-        return capital;
-    }
-
-    public String getCode2() {
-        return code2;
     }
 
 }

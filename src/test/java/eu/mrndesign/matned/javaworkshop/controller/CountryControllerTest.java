@@ -41,7 +41,7 @@ class CountryControllerTest {
 
     @Test
     void cityByCode() throws Exception {
-        Mockito.doReturn(null).when(countryService).findByCountryCode(any());
+        Mockito.doReturn(null).when(countryService).findByCountryCode(any(), any(), any(), any());
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/1")
                         .accept("application/json"))

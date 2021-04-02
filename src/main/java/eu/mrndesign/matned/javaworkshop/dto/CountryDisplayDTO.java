@@ -3,34 +3,39 @@ package eu.mrndesign.matned.javaworkshop.dto;
 import eu.mrndesign.matned.javaworkshop.model.Country;
 import eu.mrndesign.matned.javaworkshop.model.CountryLanguage;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class CountryDisplayDTO {
 
-    public static CountryDisplayDTO apply(Country country, CountryLanguage countryLanguage){
+    public static CountryDisplayDTO apply(Country country, List<CountryLanguage> countryLanguages){
         if (country != null){
             return new CountryDisplayDTO.CountryDisplayDTOBuilder(country.getCountryName())
-                    .country_language(countryLanguage!=null? countryLanguage.getLanguage(): null)
                     .life_expectancy(country.getLife_expectancy())
                     .population(country.getPopulation())
                     .continent(country.getContinent())
+                    .addLanguages(countryLanguages.stream()
+                            .map(CountryLanguage::getLanguage)
+                            .collect(Collectors.toList()))
                     .build();
         }
         return null;
     }
 
-    private String name;
-    private String continent;
-    private Integer population;
-    private Double life_expectancy;
-    private String country_language;
+    private final String name;
+    private final String continent;
+    private final Integer population;
+    private final Double lifeExpectancy;
+    private final List<String> countryLanguage;
 
     private CountryDisplayDTO(CountryDisplayDTOBuilder builder){
         this.name = builder.name;
         this.continent = builder.continent;
         this.population = builder.population;
-        this.life_expectancy = builder.life_expectancy;
-        this.country_language = builder.country_language;
+        this.lifeExpectancy = builder.lifeExpectancy;
+        this.countryLanguage = new LinkedList<>(builder.countryLanguage);
     }
 
     public String getName() {
@@ -45,12 +50,12 @@ public class CountryDisplayDTO {
         return population;
     }
 
-    public Double getLife_expectancy() {
-        return life_expectancy;
+    public Double getLifeExpectancy() {
+        return lifeExpectancy;
     }
 
-    public String getCountry_language() {
-        return country_language;
+    public List<String> getCountryLanguage() {
+        return countryLanguage;
     }
 
     @Override
@@ -72,21 +77,22 @@ public class CountryDisplayDTO {
                 "name='" + name + '\'' +
                 ", continent='" + continent + '\'' +
                 ", population=" + population +
-                ", life_expectancy=" + life_expectancy +
-                ", country_language='" + country_language + '\'' +
+                ", life_expectancy=" + lifeExpectancy +
+                ", country_languages='" + countryLanguage + '\'' +
                 '}';
     }
 
     public static class CountryDisplayDTOBuilder{
 
-        private String name;
+        private final String name;
         private String continent;
         private Integer population;
-        private Double life_expectancy;
-        private String country_language;
+        private Double lifeExpectancy;
+        private final List<String> countryLanguage;
 
         public CountryDisplayDTOBuilder(String name) {
             this.name = name;
+            countryLanguage = new LinkedList<>();
         }
 
         public CountryDisplayDTOBuilder continent(String continent){
@@ -100,14 +106,15 @@ public class CountryDisplayDTO {
         }
 
         public CountryDisplayDTOBuilder life_expectancy(Double life_expectancy){
-         this.life_expectancy = life_expectancy;
+         this.lifeExpectancy = life_expectancy;
          return this;
         }
 
-        public CountryDisplayDTOBuilder country_language(String country_language){
-           this.country_language = country_language;
-           return this;
+        public CountryDisplayDTOBuilder addLanguages(List<String> languages){
+            this.countryLanguage.addAll(languages);
+            return this;
         }
+
 
         public CountryDisplayDTO build(){
             return new CountryDisplayDTO(this);

@@ -9,9 +9,10 @@ import org.springframework.stereotype.Service;
 
 import java.rmi.ServerError;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-public class CountryService {
+public class CountryService extends BaseService{
 
     public static final String INVALID_COUNTRY_CODE = "INVALID_COUNTRY_CODE";
     public static final String INTERNAL_ERROR = "INTERNAL_ERROR";
@@ -25,17 +26,21 @@ public class CountryService {
         this.countryLanguageRepository = countryLanguageRepository;
     }
 
-    public CountryDisplayDTO findByCountryCode(String code) throws ServerError {
-
+    public List<CountryDisplayDTO> findByCountryCode(String code, Integer startPage, Integer itemsPerPage, String[] sortBy) throws ServerError {
         if (countryRepository.checkConnection()) {
-            List<Country> countries = countryRepository.findByCountryCode(code);
-            Country country = countries.size() > 0? countries.get(0) : null;
-            if (country == null) throw new ServerError(INVALID_COUNTRY_CODE, new Error());
-            List<CountryLanguage> languages = countryLanguageRepository
-                    .findByCountryCode(code);
-            CountryLanguage countryLanguage = languages.size()>0? languages.get(0) : null;
-            return CountryDisplayDTO.apply(country, countryLanguage);
+            List<Country> countries = countryRepository
+                    .findByCountryCode(code, getPageable(startPage, itemsPerPage, sortBy))
+                    .getContent();
+            if (countries.size() <= 0) throw new ServerError(INVALID_COUNTRY_CODE, new Error());
+            List<CountryLanguage> languages = countryLanguageRepository.findByCountryCode(code);
+            return applyCountryDisplayDTOList(countries, languages);
         }
         throw new ServerError(INTERNAL_ERROR, new Error());
+    }
+
+    private List<CountryDisplayDTO> applyCountryDisplayDTOList(List<Country> countries, List<CountryLanguage> languages) {
+        return countries.stream()
+                .map(x->CountryDisplayDTO.apply(x, languages))
+                .collect(Collectors.toList());
     }
 }
