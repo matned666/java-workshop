@@ -39,6 +39,10 @@ You can launch this docker image from src/main/docker folder like this :
 
 `docker-compose up --build`
 
+# Git Versions
+
+Head branch provides version where country has one main language
+listOfLanguagesPerCountry provides full list of languages used in country
 
 # Made by:
 
