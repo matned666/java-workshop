@@ -66,6 +66,17 @@ public class CountryDisplayDTO {
         return Objects.hash(name);
     }
 
+    @Override
+    public String toString() {
+        return "CountryDisplayDTO{" +
+                "name='" + name + '\'' +
+                ", continent='" + continent + '\'' +
+                ", population=" + population +
+                ", life_expectancy=" + life_expectancy +
+                ", country_language='" + country_language + '\'' +
+                '}';
+    }
+
     public static class CountryDisplayDTOBuilder{
 
         private String name;
