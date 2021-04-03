@@ -46,25 +46,22 @@ class CountryServiceTest {
 
     private Country country;
     private CountryLanguage countryLanguage;
-    private String[] sortBy;
     private Pageable pageable;
 
     @BeforeEach
     void setUp() {
         country = new Country();
         countryLanguage = new CountryLanguage();
-        sortBy = new String[1];
-        sortBy[0] = "something";
-        pageable = countryService.getPageable(1, 1, sortBy);
+        pageable = countryService.getPageable(1, 1);
     }
 
     @Test
     void findByCountryCode() throws ServerError {
         doReturn(true).when(countryRepository).checkConnection();
         doReturn(new PageImpl<>(Collections.singletonList(country), pageable, 1)).when(countryRepository).findByCountryCode(any(), any(Pageable.class));
-        doReturn(Collections.singletonList(countryLanguage)).when(countryLanguageRepository).findByCountryCode(anyString());
+        doReturn(new PageImpl<>(Collections.singletonList(countryLanguage), pageable, 1)).when(countryLanguageRepository).findByCountryCode(anyString(), any(Pageable.class));
 
-        assertEquals(Collections.singletonList(CountryDisplayDTO.apply(country, Collections.singletonList(countryLanguage))), countryService.findByCountryCode("asd", 1, 1, sortBy));
+        assertEquals(Collections.singletonList(CountryDisplayDTO.apply(country, Collections.singletonList(countryLanguage))), countryService.findByCountryCode("asd", 1, 1, 1, 1, false));
     }
 
     @Test
@@ -72,7 +69,7 @@ class CountryServiceTest {
         doReturn(true).when(countryRepository).checkConnection();
         doReturn(new PageImpl<>(Collections.emptyList(), pageable, 0)).when(countryRepository).findByCountryCode(any(), any(Pageable.class));
 
-        ServerError error = assertThrows(ServerError.class, ()-> countryService.findByCountryCode("eee", 1,1,sortBy));
+        ServerError error = assertThrows(ServerError.class, ()-> countryService.findByCountryCode("eee", 1,1, 1, 1, false));
 
         assertTrue(error.getLocalizedMessage().contains(INVALID_COUNTRY_CODE));
     }
@@ -81,7 +78,7 @@ class CountryServiceTest {
     void ifNoConnectionWithDatabaseThenReturnErrorMessage()  {
         doReturn(false).when(countryRepository).checkConnection();
 
-        ServerError error = assertThrows(ServerError.class, ()-> countryService.findByCountryCode("eee", 1,1,sortBy));
+        ServerError error = assertThrows(ServerError.class, ()-> countryService.findByCountryCode("eee", 1,1, 1, 1, false));
 
         assertTrue(error.getLocalizedMessage().contains(INTERNAL_ERROR));
     }

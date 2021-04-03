@@ -18,11 +18,12 @@ public class CountryController {
     }
 
     @GetMapping("/{code}")
-    public List<CountryDisplayDTO> cityByCode(@RequestParam(defaultValue = "${default.sort.by}", name = "sort") String[] sort,
-                                              @RequestParam(defaultValue = "${default.page.start}", name = "page") Integer page,
-                                              @RequestParam(defaultValue = "${default.page.size}", name = "amount") Integer amount,
-                                              @PathVariable String code)
-            throws ServerError {
-        return countryService.findByCountryCode(code, page, amount, sort);
+    public List<CountryDisplayDTO> cityByCode(@RequestParam(defaultValue = "${default.country.page.start}", name = "countryPage") Integer countryPage,
+                                              @RequestParam(defaultValue = "${default.country.page.size}", name = "countriesAmount") Integer countriesAmount,
+                                              @RequestParam(defaultValue = "${default.language.page.start}", name = "languagePage") Integer languagePage,
+                                              @RequestParam(defaultValue = "${default.language.page.size}", name = "languagesAmount") Integer languagesAmount,
+                                              @RequestParam(defaultValue = "${default.language.is.only.official}", name = "isOfficial") boolean onlyOfficial,
+                                              @PathVariable String code) throws ServerError {
+        return countryService.findByCountryCode(code, countryPage, countriesAmount, languagePage, languagesAmount, onlyOfficial);
     }
 }

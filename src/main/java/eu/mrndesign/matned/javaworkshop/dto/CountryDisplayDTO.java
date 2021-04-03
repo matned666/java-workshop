@@ -1,5 +1,6 @@
 package eu.mrndesign.matned.javaworkshop.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.mrndesign.matned.javaworkshop.model.Country;
 import eu.mrndesign.matned.javaworkshop.model.CountryLanguage;
 
@@ -27,7 +28,11 @@ public class CountryDisplayDTO {
     private final String name;
     private final String continent;
     private final Integer population;
+
+    @JsonProperty("life_expectancy")
     private final Double lifeExpectancy;
+
+    @JsonProperty("country_language")
     private final List<String> countryLanguage;
 
     private CountryDisplayDTO(CountryDisplayDTOBuilder builder){

@@ -9,6 +9,7 @@ It loads a postgresql db from docker project
 When app is on:
 
 GET: localhost:8080/<country_code><br>
+
 returns json:<br>
 {
 "name": "xx"
@@ -17,6 +18,13 @@ returns json:<br>
 "life_expectancy":xx
 "country_language":"xx"
 }
+
+You can use some parameters:<br>
+integer countryPage  - default 0 - country start page <br>
+integer countriesAmount - default 5 - number of countries shown in case there is more with the same code <br>
+integer languagePage - default 0 - language start page <br>
+integer languagesAmount - default 1 - number of languages shown for each country <br>
+boolean isOfficial - default true - if true than shows only one official language. <br>
 
 #Tests
 

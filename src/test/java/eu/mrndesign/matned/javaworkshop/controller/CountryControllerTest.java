@@ -17,7 +17,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import static org.mockito.ArgumentMatchers.any;
+import java.util.LinkedList;
+
+import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith({SpringExtension.class})
@@ -41,7 +43,7 @@ class CountryControllerTest {
 
     @Test
     void cityByCode() throws Exception {
-        Mockito.doReturn(null).when(countryService).findByCountryCode(any(), any(), any(), any());
+        Mockito.doReturn(new LinkedList<>()).when(countryService).findByCountryCode(anyString(), anyInt(), anyInt(), anyInt(), anyInt(), anyBoolean());
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/1")
                         .accept("application/json"))

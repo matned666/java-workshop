@@ -20,4 +20,7 @@ public class CountryLanguage {
         return language;
     }
 
+    public boolean isIs_official() {
+        return is_official;
+    }
 }
