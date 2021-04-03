@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface CountryRepository extends JpaRepository<Country, Long> {
 
-    @Query("SELECT c from Country c where c.countryCode = :id")
+    @Query("SELECT c from Country c where lower(c.countryCode) = lower(:id) or lower(c.code2) = lower(:id)")
     Page<Country> findByCountryCode(@Param("id") String id, Pageable pageable);
 
     @Query("select case when count(c)> 0 then true else false end from Country c")

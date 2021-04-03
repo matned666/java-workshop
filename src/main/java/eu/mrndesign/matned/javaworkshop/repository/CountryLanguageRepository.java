@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface CountryLanguageRepository extends JpaRepository<CountryLanguage, String> {
 
-    @Query("select cl from CountryLanguage cl where cl.country.countryCode = :country_code")
+    @Query("select cl from CountryLanguage cl where lower(cl.country.countryCode) = lower(:country_code)")
     Page<CountryLanguage> findByCountryCode(@Param("country_code") String code, Pageable pageable);
 
 }

@@ -40,11 +40,11 @@ public class CountryService extends BaseService {
             List<CountryLanguage> languages;
             if (!onlyOfficial) {
                 languages = countryLanguageRepository
-                        .findByCountryCode(code, getPageable(languagePage, languagesAmount))
+                        .findByCountryCode(countries.get(0).getCountryCode(), getPageable(languagePage, languagesAmount))
                         .getContent();
             } else {
                 languages = countryLanguageRepository
-                        .findByCountryCode(code, getPageable(0, 1000))
+                        .findByCountryCode(countries.get(0).getCountryCode(), getPageable(0, 1000))
                         .getContent().stream()
                         .filter(CountryLanguage::isIs_official)
                         .collect(Collectors.toList());

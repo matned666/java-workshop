@@ -25,6 +25,10 @@ public class Country  {
     private Long capital;
     private String code2;
 
+    public String getCountryCode() {
+        return countryCode;
+    }
+
     public String getCountryName() {
         return countryName;
     }

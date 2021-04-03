@@ -59,7 +59,7 @@ class CountryServiceTest {
     void findByCountryCode() throws ServerError {
         doReturn(true).when(countryRepository).checkConnection();
         doReturn(new PageImpl<>(Collections.singletonList(country), pageable, 1)).when(countryRepository).findByCountryCode(any(), any(Pageable.class));
-        doReturn(new PageImpl<>(Collections.singletonList(countryLanguage), pageable, 1)).when(countryLanguageRepository).findByCountryCode(anyString(), any(Pageable.class));
+        doReturn(new PageImpl<>(Collections.singletonList(countryLanguage), pageable, 1)).when(countryLanguageRepository).findByCountryCode(any(), any(Pageable.class));
 
         assertEquals(Collections.singletonList(CountryDisplayDTO.apply(country, Collections.singletonList(countryLanguage))), countryService.findByCountryCode("asd", 1, 1, 1, 1, false));
     }
